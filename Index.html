@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HBD Kub Tong</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: linear-gradient(120deg, #aeefff 0%, #ffd6ec 100%, #aeefff 100%);
+      background-size: 200% 200%;
+      animation: gradientMove 12s ease-in-out infinite;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .container {
+      /* Adjust the alpha (last value) to change transparency of the main card background (0.0 = fully transparent, 1.0 = fully opaque) */
+      background: rgba(255,255,255,0.35); /* Decreased opacity further */
+      border-radius: 24px;
+      /* box-shadow: 0 8px 32px rgba(0,0,0,0.08); */ /* Removed box-shadow */
+      padding: 32px 24px 24px 24px;
+      margin-top: 40px;
+      width: 95%;
+      max-width: 400px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    h1, h2 {
+      color: #ff7eb9;
+      margin-bottom: 16px;
+      font-size: 2.2rem;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 8px #fff6;
+    }
+    label {
+      color: #4f8cff;
+      font-weight: 700;
+      display: block;
+      margin: 16px 0 6px 0;
+      text-align: left;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid #aeefff;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      background: #f7faff;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+    button {
+      background: linear-gradient(90deg, #aeefff 0%, #ffb6e6 100%);
+      color: #fff;
+      border: none;
+      border-radius: 16px;
+      padding: 12px 32px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: 0 2px 8px #ffd6ec88;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #ffb6e6 0%, #aeefff 100%);
+    }
+    .output {
+      margin-top: 24px;
+      padding: 20px 10px;
+      /* Adjust the alpha (last value) to change transparency of the wishes/slideshow area background (0.0 = fully transparent, 1.0 = fully opaque) */
+      background: rgba(255, 246, 250, 0.15); /* Decreased opacity further and made container also more transparent */
+      border-radius: 18px;
+      /* box-shadow: 0 2px 16px #ffd6ec44, 0 0 0 4px #aeefff44; */ /* Removed box-shadow */
+      min-height: 120px;
+      position: relative;
+      animation: fadeIn 1s, pastelGlow 3.5s linear infinite alternate;
+      /* border: 3px solid #aeefff; */ /* Removed border */
+      border: none; /* Ensured no border */
+      overflow: hidden;
+    }
+    @keyframes pastelGlow {
+      0% { box-shadow: 0 2px 16px #ffd6ec44, 0 0 0 4px #aeefff44; border-color: #aeefff; }
+      25% { box-shadow: 0 2px 24px #ffb6e6aa, 0 0 0 6px #ffd6ec66; border-color: #ffb6e6; }
+      50% { box-shadow: 0 2px 20px #aeefff99, 0 0 0 8px #ffb6e688; border-color: #ffd6ec; }
+      75% { box-shadow: 0 2px 24px #aeefff99, 0 0 0 6px #aeefff66; border-color: #aeefff; }
+      100% { box-shadow: 0 2px 16px #ffd6ec44, 0 0 0 4px #aeefff44; border-color: #aeefff; }
+    }
+    .output img {
+      max-width: 220px;
+      max-height: 220px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 16px #aeefff44;
+      transition: opacity 0.5s;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    /* Slideshow controls */
+    .slideshow-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+    .slideshow-btn {
+      background: #fff;
+      color: #ff7eb9;
+      border: 2px solid #ffb6e6;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #ffd6ec44;
+      transition: background 0.2s, color 0.2s;
+    }
+    .slideshow-btn:hover {
+      background: #ffb6e6;
+      color: #fff;
+    }
+    .cute-anim {
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 80px;
+      z-index: 1;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-18px); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .music-btn {
+      background: #fff;
+      color: #ff7eb9;
+      border: 2px solid #ffb6e6;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin: 0 auto 10px auto;
+      box-shadow: 0 2px 8px #ffd6ec44;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .music-btn:hover {
+      background: #ffb6e6;
+      color: #fff;
+    }
+    .fade {
+      animation: fadeIn 1s;
+    }
+    .hidden { display: none !important; }
+    .error {
+      color: #ff7eb9;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    /* Flame animation */
+    .flame-ani {
+      animation: flameFlicker 0.7s infinite alternate;
+      transform-origin: center bottom;
+    }
+    @keyframes flameFlicker {
+      0% { transform: scaleY(1) scaleX(1) translateY(0); opacity: 0.85; }
+      40% { transform: scaleY(1.1) scaleX(0.95) translateY(-1px); opacity: 1; }
+      60% { transform: scaleY(0.95) scaleX(1.05) translateY(1px); opacity: 0.8; }
+      100% { transform: scaleY(1) scaleX(1) translateY(0); opacity: 0.9; }
+    }
+    #floatingBg {
+      position: fixed;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0; /* Initially hidden */
+      transition: opacity 1s ease-in-out; /* For fade-in effect */
+    }
+    .cloud {
+      position: absolute;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.95;
+      filter: drop-shadow(0 2px 8px #fff6fa88);
+    }
+    .cloud1 { left: 10vw; top: 12vh; width: 180px; height: 110px; background-image: url('https://i.imgur.com/4Lp6xOE.png'); animation: cloudMove1 32s linear infinite; }
+    .cloud2 { left: 70vw; top: 22vh; width: 180px; height: 110px; background-image: url('https://i.imgur.com/yVRdffs.png'); animation: cloudMove2 40s linear infinite; }
+    .cloud3 { left: 20vw; top: 30vh; width: 180px; height: 110px; background-image: url('https://i.postimg.cc/4ygyCR1P/A52-AE1-B9-67-E5-445-F-8814-7-F07-CA8098-FF.jpg '); animation: cloudMove3 40s linear infinite; }
+    .cloud4 { left: 60vw; top: 8vh; width: 100px; height: 60px; background-image: url('https://i.postimg.cc/KYTmmsjH/IMG-0292.jpg'); animation: cloudMove4 40s linear infinite; }
+    .cloud5 { left: 80vw; top: 60vh; width: 160px; height: 100px; background-image: url('https://i.postimg.cc/vB1f8yfd/5672182-F-CC1-C-4510-AA6-B-3-EB79-A22-D657.jpg '); animation: cloudMove5 40s linear infinite; }
+    .cloud6 { left: 80vw; top: 60vh; width: 160px; height: 100px; background-image: url('https://i.postimg.cc/QdX7911m/01620175-DCAF-4646-A177-E19-BC626-FEED.jpg'); animation: cloudMove6 40s linear infinite; }
+    @keyframes cloudMove1 { 0%{left:10vw;} 100%{left:80vw;} }
+    @keyframes cloudMove2 { 0%{left:70vw;} 100%{left:0vw;} }
+    @keyframes cloudMove3 { 0%{left:20vw;} 100%{left:80vw;} }
+    @keyframes cloudMove4 { 0%{left:60vw;} 100%{left:0vw;} }
+    @keyframes cloudMove5 { 0%{left:80vw;} 100%{left:0vw;} }
+    @keyframes cloudMove6 { 0%{left:120vw;} 100%{left:0vw;} }
+
+    /* Image slideshow for .output img */
+    /* (JS will handle the image switching) */
+
+    .star {
+      position: absolute;
+      width: 18px; height: 18px;
+      background: #aeefff;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #fff, 0 0 16px #aeefff;
+      opacity: 0.8;
+    }
+    .star1 { left: 20vw; top: 60vh; animation: starMove1 18s linear infinite; }
+    .star2 { left: 80vw; top: 80vh; background: #ffb6e6; box-shadow: 0 0 8px #fff, 0 0 16px #ffb6e6; animation: starMove2 22s linear infinite; }
+    @keyframes starMove1 { 0%{top:60vh;} 100%{top:10vh;} }
+    @keyframes starMove2 { 0%{top:80vh;} 100%{top:20vh;} }
+    .heart {
+      position: absolute;
+      width: 22px; height: 22px;
+      background: #ffb6e6;
+      clip-path: polygon(50% 0%, 100% 35%, 82% 100%, 50% 80%, 18% 100%, 0% 35%);
+      opacity: 0.7;
+      filter: drop-shadow(0 0 6px #fff6fa);
+    }
+    .heart1 { left: 60vw; top: 10vh; animation: heartMove1 30s linear infinite; }
+    .heart2 { left: 30vw; top: 80vh; background: #aeefff; animation: heartMove2 36s linear infinite; }
+    @keyframes heartMove1 { 0%{top:10vh;} 100%{top:70vh;} }
+    @keyframes heartMove2 { 0%{top:80vh;} 100%{top:20vh;} }
+    /* Slideshow styles */
+    #imageSlideshow {
+      display: flex;
+      justify-content: space-around; /* Distribute space for 2 images */
+      align-items: center;
+      margin-top: 18px;
+      width: 100%;
+      height: 200px; /* Adjust as needed */
+      position: relative;
+    }
+    .slide-image {
+      width: 48%; /* Each image takes almost half */
+      height: 100%;
+      object-fit: contain; /* Show full image, might have letterboxing */
+      border-radius: 12px;
+      box-shadow: 0 2px 8px #aeefff66;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+      position: absolute; /* For stacking and fading */
+    }
+    .slide-image.active {
+      opacity: 1;
+    }
+    .slide-image.left {
+      left: 0;
+    }
+    .slide-image.right {
+      right: 0;
+    }
+
+    /* Video Background for cardPage */
+    #cardVideoBg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Cover the entire container */
+      z-index: -1; /* Place it behind other content */
+      opacity: 1; /* Increased from 0.8 to 1 for max clarity */
+    }
+  </style>
+  <script>
+    // ถ้าเปลี่ยน title แล้วไม่ขึ้น ให้ลอง hard refresh (Ctrl+F5 หรือ Cmd+Shift+R)
+    // หรือเคลียร์ cache browser เพราะ browser อาจ cache title เดิมไว้
+    // ตัวอย่าง: document.title = "HBD Kub Tong";
+  </script>
+</head>
+<body>
+  <div class="container fade" id="loginPage">
+    <h1>ล็อกอินเลยไอ้อ้วน</h1>
+    <form id="loginForm">
+      <label for="receiver">NAME</label>
+      <input type="text" id="receiver" required placeholder="user">
+      <label for="password">PASSWORD</label>
+      <input type="password" id="password" required placeholder="password">
+      <div class="error" id="loginError" style="display:none;"></div>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <div class="container fade hidden" id="blowCakePage">
+    <h2>เป่าเค้กวันเกิดเลย</h2>
+    <div style="position:relative;display:flex;justify-content:center;align-items:center;min-height:180px;">
+      <svg id="cakeSVG" width="160" height="180" viewBox="0 0 160 180">
+        <!-- เค้ก -->
+        <ellipse cx="80" cy="150" rx="60" ry="18" fill="#ffe0f0"/>
+        <rect x="30" y="80" width="100" height="70" rx="24" fill="#ffb6e6" stroke="#fff" stroke-width="3"/>
+        <ellipse cx="80" cy="80" rx="50" ry="18" fill="#fff6fa" stroke="#ffb6e6" stroke-width="2"/>
+        <!-- ครีมบนเค้ก -->
+        <ellipse cx="50" cy="90" rx="8" ry="4" fill="#fff"/>
+        <ellipse cx="80" cy="88" rx="10" ry="5" fill="#fff"/>
+        <ellipse cx="110" cy="90" rx="8" ry="4" fill="#fff"/>
+        <!-- เทียน 3 เล่ม -->
+        <g id="candles">
+          <g>
+            <rect x="55" y="60" width="6" height="22" rx="3" fill="#aeefff"/>
+            <ellipse cx="58" cy="60" rx="3" ry="3" fill="#fff"/>
+            <g class="flame" id="flame1">
+              <ellipse cx="58" cy="55" rx="3" ry="6" fill="gold" style="opacity:0.85;filter:drop-shadow(0 0 6px gold);"/>
+            </g>
+          </g>
+          <g>
+            <rect x="77" y="56" width="6" height="26" rx="3" fill="#aeefff"/>
+            <ellipse cx="80" cy="56" rx="3" ry="3" fill="#fff"/>
+            <g class="flame" id="flame2">
+              <ellipse cx="80" cy="49" rx="3" ry="7" fill="gold" style="opacity:0.85;filter:drop-shadow(0 0 8px gold);"/>
+            </g>
+          </g>
+          <g>
+            <rect x="101" y="62" width="6" height="20" rx="3" fill="#aeefff"/>
+            <ellipse cx="104" cy="62" rx="3" ry="3" fill="#fff"/>
+            <g class="flame" id="flame3">
+              <ellipse cx="104" cy="57" rx="3" ry="5" fill="gold" style="opacity:0.85;filter:drop-shadow(0 0 6px gold);"/>
+            </g>
+          </g>
+        </g>
+      </svg>
+      <div id="confetti" style="display:none;position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;"></div>
+    </div>
+    <button id="blowBtn" style="margin-top:18px;background:#fff;color:#ff7eb9;border:2px solid #ffb6e6;box-shadow:0 2px 8px #ffd6ec44;border-radius:16px;padding:10px 28px;font-size:1.1rem;cursor:pointer;">🎂 เป่าเค้ก</button>
+    <div style="margin-top:18px;">
+      <!-- ใช้ audio เดียวสำหรับทั้ง 2 หน้า -->
+      <audio id="bgMusic" loop>
+        <!-- ===== ใส่ URL ของเพลงที่นี่ ===== -->
+        <source src="Music.mp3" type="audio/mpeg">
+      </audio>
+    </div>
+  </div>
+
+  <div class="container fade hidden" id="cardPage">
+    <!-- Video Background -->
+    <video muted loop id="cardVideoBg">
+      <!-- Source will be set by JavaScript -->
+    </video>
+    <!-- ===== ดาวตกพื้นหลัง (ขอบซ้าย-ขวา) ===== -->
+    <canvas id="starsBg" style="position:fixed;z-index:0;left:0;top:0;width:100vw;height:100vh;pointer-events:none;"></canvas>
+    <h2>Happy Birthday Kub</h2>
+    <div class="output" id="output"></div>
+    <div style="margin-top:18px;">
+      <!-- ปุ่ม mute/unmute สำหรับเพลง -->
+      <button class="music-btn" id="muteBtn" title="ปิด/เปิดเสียงเพลง">🔊</button>
+    </div>
+    <!-- ===== เมฆ/ดาว/หัวใจลอยพื้นหลัง ===== -->
+    <div id="floatingBg">
+      <div class="cloud cloud1"></div>
+      <div class="cloud cloud2"></div>
+      <div class="cloud cloud3"></div>
+      <div class="cloud cloud4"></div>
+      <div class="cloud cloud5"></div>
+      <div class="cloud cloud6"></div>
+      <div class="star star1"></div>
+      <div class="star star2"></div>
+      <div class="heart heart1"></div>
+      <div class="heart heart2"></div>
+    </div>
+  </div>
+
+  <script>
+    // --- CONFIG ---
+    // ตั้งค่าข้อมูลการ์ดอวยพรที่ผู้รับจะเห็น
+    const CARD = {
+      sender: 'ICE🤍🤏', // ชื่อผู้ส่ง
+      wish: 'ขอให้เธอมีความสุขมากๆ สมหวังในทุกสิ่งที่ตั้งใจ สุขภาพแข็งแรง น่ารักแบบนี้ตลอดไปเลยนะ 💖',
+      // ===== เปลี่ยนลิงก์รูปภาพการ์ดอวยพรตรงนี้ =====
+      photo: 'https://cdn.pixabay.com/photo/2016/11/29/12/54/birthday-1869260_1280.jpg',
+      // ===== รูปภาพสำหรับสไลด์โชว์ (ใส่ URL ของรูปภาพที่นี่) =====
+      slideshowImages: [
+        'https://i.imgur.com/4Lp6xOE.png',  // Cloud image 1
+        'https://i.imgur.com/yVRdffs.png',  // Cloud image 2
+        'https://i.postimg.cc/KYTmmsjH/IMG-0292.jpg',
+        'https://i.postimg.cc/4ygyCR1P/A52-AE1-B9-67-E5-445-F-8814-7-F07-CA8098-FF.jpg',
+        'https://i.postimg.cc/vB1f8yfd/5672182-F-CC1-C-4510-AA6-B-3-EB79-A22-D657.jpg',
+        'https://i.postimg.cc/QdX7911m/01620175-DCAF-4646-A177-E19-BC626-FEED.jpg'
+      ],
+      // ===== ใส่ URL ของวิดีโอพื้นหลังสำหรับ cardPage ที่นี่ =====
+      // ===== VV IMPORTANT VV =====
+      // ===== PASTE YOUR VIDEO URL BELOW (e.g., 'https://example.com/myvideo.mp4') =====
+      videoSrc: 'copy_EC9CCA99-4D3E-4446-93E9-EE1376BA9B2A-_1_.mp4' // <<<<<<< ADD YOUR VIDEO URL HERE
+    };
+    const PASSWORD = '24062544';
+
+    // --- Login Logic ---
+    const loginPage = document.getElementById('loginPage');
+    const blowCakePage = document.getElementById('blowCakePage');
+    const cardPage = document.getElementById('cardPage');
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
+    let receiverName = '';
+
+    loginForm.onsubmit = e => {
+      e.preventDefault();
+      const receiver = document.getElementById('receiver').value.trim();
+      const password = document.getElementById('password').value;
+      if (!receiver) {
+        loginError.textContent = 'กรุณาใส่ชื่อของคุณ';
+        loginError.style.display = 'block';
+        return;
+      }
+      if (password !== PASSWORD) {
+        loginError.textContent = 'รหัสผ่านไม่ถูกต้อง';
+        loginError.style.display = 'block';
+        return;
+      }
+      receiverName = receiver;
+      loginError.style.display = 'none';
+      loginPage.classList.add('hidden');
+      blowCakePage.classList.remove('hidden');
+      // reset cake state
+      resetCake();
+    };
+
+    // --- Blow Cake Logic ---
+    const blowBtn = document.getElementById('blowBtn');
+    const cakeSVG = document.getElementById('cakeSVG');
+    const confetti = document.getElementById('confetti');
+    let cakeBlown = false;
+    function resetCake() {
+      cakeBlown = false;
+      // เปิดเปลวไฟใหม่
+      if (cakeSVG) {
+        for (let i = 1; i <= 3; i++) {
+          const flame = cakeSVG.getElementById ? cakeSVG.getElementById('flame'+i) : document.getElementById('flame'+i);
+          if (flame) {
+            flame.style.opacity = 1;
+            flame.classList.add('flame-ani');
+          }
+        }
+      }
+      if (confetti) confetti.style.display = 'none';
+      if (blowBtn) {
+        blowBtn.textContent = '🎂 เป่าเค้ก';
+        blowBtn.disabled = false;
+      }
+    }
+    // ใส่แอนิเมชันเปลวไฟทันทีที่โหลด
+    window.addEventListener('DOMContentLoaded',()=>{
+      if (cakeSVG) {
+        for (let i = 1; i <= 3; i++) {
+          const flame = cakeSVG.getElementById ? cakeSVG.getElementById('flame'+i) : document.getElementById('flame'+i);
+          if (flame) flame.classList.add('flame-ani');
+        }
+      }
+    });
+    blowBtn.onclick = () => {
+      if (cakeBlown) return;
+      cakeBlown = true;
+      // ดับเปลวไฟทีละดวง
+      if (cakeSVG) {
+        for (let i = 1; i <= 3; i++) {
+          const flame = cakeSVG.getElementById ? cakeSVG.getElementById('flame'+i) : document.getElementById('flame'+i);
+          if (flame) {
+            setTimeout(()=>{
+              flame.style.transition = 'opacity 0.5s, transform 0.5s';
+              flame.style.opacity = 0;
+              flame.style.transform = 'scaleY(0.1) scaleX(0.1)';
+            }, 200*i);
+          }
+        }
+      }
+      // confetti effect
+      if (confetti) {
+        confetti.style.display = 'block';
+        confetti.innerHTML = '';
+        for(let i=0;i<40;i++){
+          const el = document.createElement('div');
+          el.style.position = 'absolute';
+          el.style.left = Math.random()*100+'%';
+          el.style.top = '-10px';
+          el.style.width = '8px';
+          el.style.height = '16px';
+          el.style.background = `hsl(${Math.random()*360},80%,80%)`;
+          el.style.borderRadius = '4px';
+          el.style.opacity = 0.8;
+          el.style.transform = `rotate(${Math.random()*360}deg)`;
+          el.style.transition = 'top 1.2s cubic-bezier(.4,1.4,.7,1), opacity 1.2s';
+          confetti.appendChild(el);
+          setTimeout(()=>{
+            el.style.top = (60+Math.random()*30)+'%';
+            el.style.opacity = 0;
+          }, 30);
+        }
+        setTimeout(()=>{confetti.style.display='none';}, 1500);
+      }
+      blowBtn.textContent = '🎂🎉';
+      blowBtn.disabled = true;
+      setTimeout(()=>{
+        blowCakePage.classList.add('hidden');
+        cardPage.classList.remove('hidden');
+        showCard();
+      }, 1800);
+    };
+
+    // --- Show Card ---
+    const output = document.getElementById('output');
+    function showCard() {
+      // Set video background source
+      const videoBg = document.getElementById('cardVideoBg');
+      if (videoBg && CARD.videoSrc && CARD.videoSrc !== 'YOUR_VIDEO_URL_HERE.mp4') {
+        const sourceElement = document.createElement('source');
+        sourceElement.src = CARD.videoSrc;
+        sourceElement.type = 'video/mp4'; // Assuming mp4, adjust if needed
+        videoBg.innerHTML = ''; // Clear existing sources
+        videoBg.appendChild(sourceElement);
+        videoBg.load(); // Important to load the new source
+      } else if (videoBg) {
+        videoBg.style.display = 'none'; // Hide if no video src
+      }
+
+      output.innerHTML = `
+        <div style="position:relative;">
+          <h2 style="color:#4f8cff;">สุขสันต์วันเกิด ${receiverName}!</h2>
+          <p id="typewriterWish" style="color:#ff7eb9;font-size:1.1rem;min-height:2.5em;"></p>
+          <div style="margin-top:10px;color:#aeefff;font-size:1rem;">จาก ${CARD.sender}</div>
+          <!-- ===== ส่วนแสดงสไลด์รูปภาพ ===== -->
+          <div id="imageSlideshow">
+            <!-- Images will be inserted here by JavaScript -->
+          </div>
+        </div>
+      `;
+      output.style.display = 'block';
+      output.scrollIntoView({behavior:'smooth'});
+      updateMuteBtn();
+      // Typewriter effect
+      const wishText = CARD.wish;
+      const wishElem = document.getElementById('typewriterWish');
+      let i = 0;
+      function typeWriter() {
+        if (i <= wishText.length) {
+          wishElem.textContent = wishText.slice(0, i);
+          i++;
+          setTimeout(typeWriter, 80); // เพิ่มความล่าช้าเป็น 80ms ต่อตัวอักษร
+        } else {
+          startImageSlideshow(); // เริ่มสไลด์โชว์หลังจากพิมพ์เสร็จ
+
+          const videoBg = document.getElementById('cardVideoBg');
+          const floatingBg = document.getElementById('floatingBg'); // Get floatingBg element
+
+          if (videoBg && CARD.videoSrc && CARD.videoSrc !== 'YOUR_VIDEO_URL_HERE.mp4') {
+            setTimeout(() => {
+              videoBg.play().catch(error => console.log("Error attempting to play video after slideshow:", error));
+              if (floatingBg) {
+                floatingBg.style.opacity = 1; // Show floating background
+              }
+            }, 850); // Delay to match image fade-in and video start
+          } else {
+            // If no video, show floating background after a similar delay for image slideshow to appear
+            if (floatingBg) {
+              setTimeout(() => {
+                floatingBg.style.opacity = 1; // Show floating background
+              }, 850); // Match delay for consistency
+            }
+          }
+        }
+      }
+      typeWriter();
+    }
+
+    // --- Music ---
+    // ใช้ audio เดียว (bgMusic) สำหรับทั้ง 2 หน้า
+    const bgMusic = document.getElementById('bgMusic');
+    // เมื่อกดเป่าเค้ก ให้เล่นเพลงทันที (ถ้ายังไม่ได้เล่น)
+    blowBtn.onclick = (() => {
+      const orig = blowBtn.onclick;
+      return function(e) {
+        if (bgMusic.paused) {
+          bgMusic.currentTime = 0;
+          bgMusic.play();
+        }
+        if (orig) orig.call(this, e);
+      };
+    })();
+
+    // ปุ่ม mute/unmute ในหน้า card
+    const muteBtn = document.getElementById('muteBtn');
+    function updateMuteBtn() {
+      muteBtn.textContent = bgMusic.muted ? '🔇' : '🔊';
+    }
+    muteBtn.onclick = () => {
+      bgMusic.muted = !bgMusic.muted;
+      updateMuteBtn();
+    };
+    // อัปเดตปุ่ม mute ตอนเข้า cardPage
+    cardPage.addEventListener('transitionstart', updateMuteBtn);
+
+    // ===== เอฟเฟกต์ดาวตกพื้นหลังหน้า cardPage =====
+    function pastelStarColor() {
+      // สุ่มสีพาสเทลฟ้า-ชมพู-ขาว
+      const pastel = [
+        'rgba(174,239,255,0.85)', // ฟ้า
+        'rgba(255,182,230,0.85)', // ชมพู
+        'rgba(255,255,255,0.85)'  // ขาว
+      ];
+      return pastel[Math.floor(Math.random()*pastel.length)];
+    }
+
+    function startShootingStars() {
+      const canvas = document.getElementById('starsBg');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      // คำนวณขอบเขต cardPage (ตรงกลาง)
+      function getCardBounds() {
+        const card = document.getElementById('cardPage');
+        if (!card || card.offsetWidth === 0) {
+          return {left:canvas.width/2-150, right:canvas.width/2+150, top:canvas.height*0.2, bottom:canvas.height*0.8};
+        }
+        const rect = card.getBoundingClientRect();
+        return {
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom
+        };
+      }
+
+      let stars = [];
+      function spawnStar() {
+        const bounds = getCardBounds();
+        const side = Math.random() < 0.5 ? 'left' : 'right';
+        // ดาวตกจะเริ่มที่ขอบซ้ายหรือขวา (ไม่ทับ cardPage)
+        let x, y, angle;
+        const margin = 24;
+        if (side === 'left') {
+          x = Math.random() * Math.max(bounds.left - margin, 40);
+          y = Math.random() * canvas.height;
+          angle = Math.PI/4 + (Math.random()-0.5)*0.15; // 45deg +/-
+        } else {
+          x = bounds.right + Math.random() * Math.max(canvas.width - bounds.right - margin, 40);
+          y = Math.random() * canvas.height;
+          angle = (3*Math.PI/4) + (Math.random()-0.5)*0.15; // 135deg +/-
+        }
+        const len = 80 + Math.random()*40;
+        const speed = 4 + Math.random()*2;
+        stars.push({
+          x,
+          y,
+          len,
+          speed,
+          angle,
+          color: pastelStarColor(),
+          alpha: 1
+        });
+      }
+      let lastSpawn = 0;
+      function animate(ts) {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        // spawn new star every ~0.7-1.5s
+        if (!lastSpawn || ts-lastSpawn > 700+Math.random()*800) {
+          spawnStar();
+          lastSpawn = ts;
+        }
+        stars.forEach(star => {
+          ctx.save();
+          ctx.globalAlpha = star.alpha;
+          ctx.strokeStyle = star.color;
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.moveTo(star.x, star.y);
+          ctx.lineTo(star.x - Math.cos(star.angle)*star.len, star.y - Math.sin(star.angle)*star.len);
+          ctx.shadowColor = star.color;
+          ctx.shadowBlur = 12;
+          ctx.stroke();
+          ctx.restore();
+          // move star
+          star.x += Math.cos(star.angle)*star.speed;
+          star.y += Math.sin(star.angle)*star.speed;
+          star.alpha -= 0.008*star.speed;
+        });
+        stars = stars.filter(star => star.alpha > 0 && star.x < canvas.width+60 && star.y < canvas.height+60);
+        requestAnimationFrame(animate);
+      }
+      animate(0);
+    }
+
+    // เริ่มดาวตกเมื่อเข้า cardPage
+    cardPage.addEventListener('transitionstart', startShootingStars);
+    // หรือถ้าอยากให้เริ่มทันทีที่โหลด cardPage
+    // startShootingStars();
+
+    // ===== Logic สำหรับสไลด์รูปภาพ =====
+    let slideInterval;
+    let currentSlideIndices = [0, 1]; // Indices of the two images currently shown
+
+    function startImageSlideshow() {
+      const slideshowContainer = document.getElementById('imageSlideshow');
+      if (!slideshowContainer || CARD.slideshowImages.length < 2) {
+        if (slideshowContainer) slideshowContainer.innerHTML = '<p style="color:#ff7eb9;">ต้องการรูปอย่างน้อย 2 รูปสำหรับสไลด์โชว์</p>';
+        return;
+      }
+
+      // Preload images for smoother transitions (optional but good practice)
+      CARD.slideshowImages.forEach(src => {
+        const img = new Image();
+        img.src = src;
+      });
+
+      function updateSlides() {
+        slideshowContainer.innerHTML = ''; // Clear previous images
+
+        const img1 = document.createElement('img');
+        img1.src = CARD.slideshowImages[currentSlideIndices[0]];
+        img1.alt = 'Slideshow image 1';
+        img1.className = 'slide-image left';
+
+        const img2 = document.createElement('img');
+        img2.src = CARD.slideshowImages[currentSlideIndices[1]];
+        img2.alt = 'Slideshow image 2';
+        img2.className = 'slide-image right';
+
+        slideshowContainer.appendChild(img1);
+        slideshowContainer.appendChild(img2);
+
+        // Trigger fade-in
+        setTimeout(() => {
+          img1.classList.add('active');
+          img2.classList.add('active');
+        }, 50); // Small delay to allow CSS to apply initial opacity 0
+
+        // Prepare next indices
+        currentSlideIndices[0] = (currentSlideIndices[0] + 2) % CARD.slideshowImages.length;
+        currentSlideIndices[1] = (currentSlideIndices[1] + 2) % CARD.slideshowImages.length;
+        
+        // Handle cases with odd number of images for the last pair
+        if (currentSlideIndices[0] === currentSlideIndices[1] && CARD.slideshowImages.length > 1) {
+            currentSlideIndices[1] = (currentSlideIndices[1] + 1) % CARD.slideshowImages.length;
+            if (currentSlideIndices[1] === currentSlideIndices[0]) { // if still same (e.g. length 1 or 2)
+              if(CARD.slideshowImages.length > 1) currentSlideIndices[1] = (currentSlideIndices[0] + 1) % CARD.slideshowImages.length;
+              else currentSlideIndices[1] = currentSlideIndices[0]; // just repeat if only 1 image
+            }
+        }
+        if (currentSlideIndices[0] >= CARD.slideshowImages.length) currentSlideIndices[0] = 0;
+        if (currentSlideIndices[1] >= CARD.slideshowImages.length) {
+            currentSlideIndices[1] = (currentSlideIndices[0] + 1) % CARD.slideshowImages.length;
+            if (currentSlideIndices[0] === currentSlideIndices[1] && CARD.slideshowImages.length > 1) {
+               currentSlideIndices[1] = 0; // loop back for second image if first is last
+            } else if (CARD.slideshowImages.length <=1){
+              currentSlideIndices[1] = currentSlideIndices[0];
+            }
+        }
+
+
+      }
+
+      updateSlides(); // Initial display
+
+      if (slideInterval) clearInterval(slideInterval);
+      if (CARD.slideshowImages.length > 2 || (CARD.slideshowImages.length === 2 && currentSlideIndices[0] !== 0)) { // only interval if more than 2 images or if we want to swap the initial 2
+          slideInterval = setInterval(updateSlides, 3000); // Change images every 3 seconds
+      } else if (CARD.slideshowImages.length <= 1) {
+          // If only one image, no need to interval, or handle as a static display
+          if(CARD.slideshowImages.length === 1) { // display single image if only one
+               slideshowContainer.innerHTML = '';
+               const img = document.createElement('img');
+               img.src = CARD.slideshowImages[0];
+               img.alt = 'Slideshow image';
+               img.className = 'slide-image active';
+               img.style.width = '90%'; // Center single image
+               img.style.position = 'relative';
+               slideshowContainer.appendChild(img);
+          }
+      }
+    }
+
+    // Ensure slideshow stops if user navigates away (e.g., reloads, goes back)
+    window.addEventListener('beforeunload', () => {
+      if (slideInterval) clearInterval(slideInterval);
+    });
+  </script>
+</body>
+</html> 
